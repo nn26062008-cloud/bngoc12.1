@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Báo tường điện tử 12A1 | Nguyễn Bảo Ngọc</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Montserrat:wght@300;400;600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-paper: #f9f7f1;
+            --accent: #b33939;
+            --secondary: #218c74;
+            --info: #2980b9;
+            --text-dark: #2c3e50;
+            --shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        * { box-sizing: border-box; transition: all 0.3s ease; }
+
+        body {
+            background-color: #e0d9d1;
+            background-image: url('https://www.transparenttextures.com/patterns/p6.png');
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 20px;
+            color: var(--text-dark);
+            line-height: 1.7;
+            position: relative;
+        }
+
+        /* Hiệu ứng nhấp nhô khi click */
+        @keyframes clickShake {
+            0% { transform: scale(1); }
+            25% { transform: scale(0.95) rotate(2deg); }
+            50% { transform: scale(0.95) rotate(-2deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+        .shake-effect { animation: clickShake 0.4s ease-in-out; }
+
+        /* Họa tiết trang trí lấp khoảng trống */
+        .deco-icon {
+            position: absolute;
+            z-index: 0;
+            opacity: 0.3;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .newspaper-board {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: var(--bg-paper);
+            padding: 50px;
+            border: 2px solid #333;
+            outline: 15px solid var(--bg-paper);
+            box-shadow: var(--shadow);
+            position: relative;
+            z-index: 1;
+        }
+
+        .newspaper-board::before {
+            content: "✨"; position: absolute; top: 10px; left: 10px; font-size: 30px; opacity: 0.5;
+        }
+        .newspaper-board::after {
+            content: "🎨"; position: absolute; bottom: 10px; right: 10px; font-size: 30px; opacity: 0.5;
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 4px double var(--text-dark);
+            padding-bottom: 30px;
+            margin-bottom: 60px;
+        }
+
+        header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            margin: 0;
+            text-transform: uppercase;
+            color: #1a1a1a;
+            letter-spacing: 5px;
+        }
+
+        p { text-align: justify; text-justify: inter-word; margin-bottom: 15px; }
+
+        .content-container { display: grid; gap: 60px; position: relative; }
+
+        .section {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 40px;
+            align-items: flex-start;
+        }
+
+        .section.reverse { grid-template-columns: 1.2fr 1fr; }
+
+        .image-box {
+            background: white;
+            padding: 10px 10px 15px 10px; /* Giảm padding dưới do bỏ chú thích */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            border: 1px solid #eee;
+            position: relative;
+        }
+
+        .image-box img {
+            width: 100%;
+            height: auto;
+            max-height: 250px;
+            object-fit: cover;
+            cursor: pointer;
+            display: block;
+        }
+
+        .article-card h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            margin: 0 0 15px 0;
+            border-left: 5px solid var(--accent);
+            padding-left: 15px;
+        }
+
+        .btn-detail, .btn-nav {
+            background: #fff;
+            border: 2px solid var(--text-dark);
+            padding: 10px 20px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+        }
+
+        .btn-detail:hover, .btn-nav:hover {
+            background: var(--text-dark);
+            color: #fff;
+        }
+
+        .task-table { width: 100%; border-collapse: collapse; margin-top: 20px; background: #fff; font-size: 0.85rem; }
+        .task-table th, .task-table td { border: 1px solid #333; padding: 10px; text-align: left; }
+        .task-table th { background-color: #f2f2f2; }
+        .member-name { color: #d63031; font-weight: bold; }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0; top: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: var(--bg-paper);
+            padding: 40px;
+            max-width: 600px;
+            width: 90%;
+            position: relative;
+            border: 3px solid #333;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .close-btn {
+            position: absolute;
+            right: 15px;
+            top: 10px;
+            font-size: 30px;
+            cursor: pointer;
+            color: var(--accent);
+        }
+
+        @media (max-width: 768px) {
+            .section, .section.reverse { grid-template-columns: 1fr; }
+            header h1 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="deco-icon" style="top: 5%; left: 5%; font-size: 40px;">☁️</div>
+<div class="deco-icon" style="top: 20%; right: 5%; font-size: 30px;">⭐</div>
+<div class="deco-icon" style="bottom: 10%; left: 3%; font-size: 35px;">✏️</div>
+<div class="deco-icon" style="top: 50%; left: 1%; font-size: 25px;">✨</div>
+<div class="deco-icon" style="bottom: 30%; right: 2%; font-size: 45px;">🌈</div>
+
+<div class="newspaper-board">
+    <div id="main-view">
+        <header>
+            <h1>BÁO TƯỜNG ONLINE</h1>
+            <p style="text-align: center; font-family: 'Dancing Script'; font-size: 1.8rem; color: var(--accent);">Chủ đề: Tác động của Mạng Xã Hội</p>
+        </header>
+
+        <div class="content-container">
+            <div style="position: absolute; top: 20%; left: 45%; opacity: 0.1; font-size: 50px;">💬</div>
+            <div style="position: absolute; bottom: 20%; right: 45%; opacity: 0.1; font-size: 50px;">📱</div>
+
+            <div class="section">
+                <div class="image-box" style="transform: rotate(-2deg);">
+                    <img src="https://cdn2.fptshop.com.vn/unsafe/2022_4_14_637855277699664384_mang-xa-hoi-la-gi.jpg" onclick="handleImageClick('m1', this)">
+                </div>
+                <div class="article-card">
+                    <h2>01. Dẫn nhập</h2>
+                    <p>Mạng xã hội không chỉ là công cụ giải trí mà là nền tảng kết nối nhân loại toàn cầu. Từ những nút 'Like' ảo cho đến những giá trị thực, mạng xã hội đã và đang thay đổi hoàn toàn cách chúng ta tư duy, giao tiếp và định vị bản thân trong thời đại số.</p>
+                    <button class="btn-detail" onclick="showModal('m1')">Xem chi tiết</button>
+                </div>
+            </div>
+
+            <div class="section reverse">
+                <div class="article-card">
+                    <h2 style="border-color: var(--secondary);">02. Tích cực</h2>
+                    <p>Nơi tri thức không còn biên giới. Mạng xã hội giúp chúng ta cập nhật kiến thức từ các nguồn uy tín toàn cầu, giữ liên lạc với bạn bè và là nơi để giới trẻ tự do thể hiện cá tính sáng tạo của mình trước cộng đồng.</p>
+                    <button class="btn-detail" onclick="showModal('m2')">Xem chi tiết</button>
+                </div>
+                <div class="image-box" style="transform: rotate(2deg);">
+                    <img src="https://didongviet.vn/dchannel/wp-content/uploads/2022/11/loi-ich-cua-mang-xa-hoi-didongviet-19.jpg" onclick="handleImageClick('m2', this)">
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="image-box" style="transform: rotate(-1deg);">
+                    <img src="https://congnghevadoisong.vn/files/12-7c8827433455226cb0f8ea38dccbe306-16623866079551574056735.jpg" onclick="handleImageClick('m3', this)">
+                </div>
+                <div class="article-card">
+                    <h2>03. Tiêu cực</h2>
+                    <p>Mặt trái đầy rẫy rủi ro khi chúng ta quá đắm chìm vào thế giới ảo. Các vấn đề về sức khỏe tinh thần, tin giả (fake news) và việc lãng phí thời gian là những cảnh báo đỏ mà người dùng cần lưu tâm.</p>
+                    <button class="btn-detail" onclick="showModal('m3')">Xem chi tiết</button>
+                </div>
+            </div>
+
+            <div class="section reverse">
+                <div class="article-card">
+                    <h2 style="border-color: var(--info);">04. Giải pháp</h2>
+                    <p>Để mạng xã hội thực sự hữu ích, người dùng cần trang bị tư duy phản biện. Việc quản lý thời gian sử dụng và ưu tiên những tương tác thực tế sẽ giúp chúng ta cân bằng được cuộc sống và tâm lý.</p>
+                    <button class="btn-detail" onclick="showModal('m4')">Xem chi tiết</button>
+                </div>
+                <div class="image-box" style="transform: rotate(1.5deg);">
+                    <img src="https://thcsyendinh.bacninh.edu.vn/upload/38301/20241229/6da64b68-ab26-45e0-8170-039dcf2f1470_35ac9.jpg" onclick="handleImageClick('m4', this)">
+                </div>
+            </div>
+        </div>
+
+        <center>
+            <button class="btn-nav" style="margin-top: 50px;" onclick="goToTasks()">📋 XEM KẾ HOẠCH PHÂN CÔNG</button>
+        </center>
+    </div>
+
+    <div id="task-view" style="display: none;">
+        <h2 style="text-align: center; color: #d63031; font-family: 'Playfair Display', serif;">KẾ HOẠCH THỰC HIỆN DỰ ÁN BÁO TƯỜNG</h2>
+        <p><strong>Thành viên thực hiện duy nhất:</strong> <span class="member-name">Nguyễn Bảo Ngọc (12A1)</span></p>
+
+        <table class="task-table">
+            <thead>
+                <tr>
+                    <th>Giai đoạn</th>
+                    <th>Nhiệm vụ chi tiết</th>
+                    <th>Ghi chú / Cách thức triển khai</th>
+                    <th>Thời lượng</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><b>1. Nội dung</b></td>
+                    <td>Biên tập văn bản</td>
+                    <td>Tổng hợp ý kiến Tích cực/Tiêu cực; Soạn lời dẫn; Kiểm tra lỗi chính tả.</td>
+                    <td>30 phút</td>
+                </tr>
+                <tr>
+                    <td><b>2. Hình ảnh</b></td>
+                    <td>Thiết kế đồ họa</td>
+                    <td>Tìm ảnh chất lượng cao; Tối ưu kích thước; Chỉnh màu khớp tone giấy.</td>
+                    <td>20 phút</td>
+                </tr>
+                <tr>
+                    <td><b>3. Lập trình</b></td>
+                    <td>Lập trình web</td>
+                    <td>Xây dựng HTML/CSS; Căn chỉnh chữ đều lề (Justify); Tích hợp Modal.</td>
+                    <td>30 phút</td>
+                </tr>
+                <tr>
+                    <td><b>4. Tên miền</b></td>
+                    <td>Triển khai GitHub</td>
+                    <td>1. Tạo Repository trên GitHub.<br>2. Upload file index.html.<br>3. Vào Settings > Pages > Chọn nhánh Main > Save để nhận link miền.</td>
+                    <td>10 phút</td>
+                </tr>
+                <tr>
+                    <td><b>5. Kiểm thử</b></td>
+                    <td>Tester</td>
+                    <td>Mở link trên Chrome/Safari; Kiểm tra nút bấm và độ cân xứng bố cục.</td>
+                    <td>15 phút</td>
+                </tr>
+            </tbody>
+        </table>
+        <p style="margin-top: 20px;"><i>* Ghi chú: Bảo Ngọc tự đảm nhiệm tất cả các vai trò trên để hoàn thành dự án.</i></p>
+        <center><button class="btn-nav" onclick="goToMain()">⬅ QUAY LẠI TỜ BÁO</button></center>
+    </div>
+
+    <footer style="margin-top: 50px; text-align: center; border-top: 1px solid #ccc; padding-top: 20px; font-size: 0.85rem;">
+        <b>Tác giả:</b> Nguyễn Bảo Ngọc 12A1 <b>Cảm ơn cô Ngọc Hân đã xem ạ.
+        </b>01/04/2026 
+    </footer>
+</div>
+
+<div id="m1" class="modal"><div class="modal-content"><span class="close-btn" onclick="hideModal('m1')">&times;</span><h2>DẪN NHẬP CHI TIẾT</h2><p>Mạng xã hội đã trở thành một hệ sinh thái văn hóa mới, thay đổi cách chúng ta nhìn nhận thế giới và kết nối với mọi người.</p></div></div>
+<div id="m2" class="modal"><div class="modal-content"><span class="close-btn" onclick="hideModal('m2')">&times;</span><h2>TÍCH CỰC CHI TIẾT</h2><p>Kết nối không biên giới, lan tỏa tri thức và tạo môi trường sáng tạo không giới hạn cho giới trẻ.</p></div></div>
+<div id="m3" class="modal"><div class="modal-content"><span class="close-btn" onclick="hideModal('m3')">&times;</span><h2>TIÊU CỰC CHI TIẾT</h2><p>Nguy cơ gây nghiện, tin giả tràn lan và các vấn đề liên quan đến bảo mật thông tin cá nhân.</p></div></div>
+<div id="m4" class="modal"><div class="modal-content"><span class="close-btn" onclick="hideModal('m4')">&times;</span><h2>GIẢI PHÁP CHI TIẾT</h2><p>Sử dụng mạng văn minh, cài đặt quyền riêng tư và cân bằng giữa cuộc sống ảo với thực tế.</p></div></div>
+
+<script>
+    function showModal(id) { 
+        document.getElementById(id).style.display = "flex"; 
+    }
+
+    function handleImageClick(id, imgElement) {
+        const parent = imgElement.parentElement;
+        parent.classList.add('shake-effect');
+        setTimeout(() => {
+            parent.classList.remove('shake-effect');
+            showModal(id);
+        }, 400);
+    }
+
+    function hideModal(id) { document.getElementById(id).style.display = "none"; }
+    
+    function goToTasks() {
+        document.getElementById('main-view').style.display = "none";
+        document.getElementById('task-view').style.display = "block";
+        window.scrollTo(0,0);
+    }
+    
+    function goToMain() {
+        document.getElementById('task-view').style.display = "none";
+        document.getElementById('main-view').style.display = "block";
+        window.scrollTo(0,0);
+    }
+    
+    window.onclick = function(event) { if (event.target.className === 'modal') { event.target.style.display = "none"; } }
+</script>
+
+</body>
+</html>
